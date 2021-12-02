@@ -19,21 +19,33 @@ public class TestSelect {
 	public static void main(String[] args) {
 
 		ArrayList<Fournisseur> listeFournisseurs = new ArrayList<>();
+
+		Statement st = null;
+		ResultSet curseur = null;
+
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_LOGIN, DB_PWD)) {
 			System.out.println(connection);
-			Statement st = connection.createStatement();
-			ResultSet curseur = st.executeQuery("select * from fournisseur");
+			st = connection.createStatement();
+			curseur = st.executeQuery("select * from fournisseur");
 			while (curseur.next()) {
 				Fournisseur fournisseur = new Fournisseur(curseur.getInt("id"), curseur.getString("nom"));
 				listeFournisseurs.add(fournisseur);
 			}
-			
-			
 
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());
+		} finally {
+			try {
+				curseur.close();
+				st.close();
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		}
-		
+
 		for (Fournisseur fournisseur : listeFournisseurs) {
 			System.out.println(fournisseur.toString());
 		}
