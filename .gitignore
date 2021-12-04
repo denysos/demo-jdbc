@@ -1,2 +1,5 @@
 /target
-.class
+*.class
+*.properties
+/src/main/resources/
+
